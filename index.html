@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>تشكيلة فريق كرة القدم</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js "></script>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f4f4;
+      font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(to bottom, #e9eff3, #f4f7f9);
       margin: 0;
       padding: 20px;
       color: #333;
+      min-height: 100vh;
     }
 
     h1 {
@@ -74,7 +76,9 @@
     .pitch {
       width: 600px;
       height: 400px;
-      background: linear-gradient(to bottom, #2ecc71, #27ae60);
+      background-image: url('https://example.com/realistic-football-pitch.jpg');
+      background-size: cover;
+      background-position: center;
       position: relative;
       margin: 30px auto;
       border: 3px solid #fff;
@@ -84,14 +88,49 @@
 
     .player {
       position: absolute;
-      color: white;
+      color: white; /* Ensure text color contrasts with background */
       text-align: center;
-      font-size: 14px;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 8px 10px;
-      border-radius: 50px;
-      white-space: pre-line;
-      text-shadow: 1px 1px 2px black;
+      font-size: 12px; /* Adjusted font size */
+      background-color: #3498db; /* Solid background color */
+      padding: 0; /* Minimal padding */
+      border-radius: 50%; /* Circular shape */
+      /* white-space: pre-line; Removed */
+      text-shadow: 0 1px 1px rgba(0,0,0,0.4); /* More subtle text shadow */
+      width: 50px; /* Fixed width */
+      height: 50px; /* Fixed height */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle box shadow */
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; /* Smooth transition */
+    }
+
+    .player-name-box {
+      background-color: #2c3e50;
+      padding: 5px 8px;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 12px;
+      margin-top: 5px;
+      color: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      /* Positioned by JavaScript, so no 'position' property here initially */
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; /* Smooth transition */
+    }
+
+    .player-container {
+      position: absolute;
+      text-align: center;
+    }
+
+    .player-container:hover .player {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .player-container:hover .player-name-box {
+      transform: translateY(-2px) scale(1.05); /* Moves slightly up and scales */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
   </style>
 </head>
@@ -127,133 +166,133 @@
 <script>
   const positionsByTactic = {
     "4-3-3": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 150, y: 300 },
-      { name: "", pos: "مدافع", x: 250, y: 300 },
-      { name: "", pos: "مدافع", x: 350, y: 300 },
-      { name: "", pos: "مدافع", x: 450, y: 300 },
-      { name: "", pos: "وسط محور", x: 250, y: 200 },
-      { name: "", pos: "وسط هجومي", x: 350, y: 200 },
-      { name: "", pos: "جناح يمين", x: 150, y: 100 },
-      { name: "", pos: "مهاجم", x: 300, y: 100 },
-      { name: "", pos: "جناح يسار", x: 450, y: 100 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 150, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 250, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 350, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 450, y: 300 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 250, y: 200 },
+      { name: "", pos: "وسط هجومي", abbr: "و.هـ", x: 350, y: 200 },
+      { name: "", pos: "جناح يمين", abbr: "ج.ي", x: 150, y: 100 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 300, y: 100 },
+      { name: "", pos: "جناح يسار", abbr: "ج.س", x: 450, y: 100 }
     ],
     "4-4-2": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 150, y: 300 },
-      { name: "", pos: "مدافع", x: 250, y: 300 },
-      { name: "", pos: "مدافع", x: 350, y: 300 },
-      { name: "", pos: "مدافع", x: 450, y: 300 },
-      { name: "", pos: "وسط يمين", x: 150, y: 200 },
-      { name: "", pos: "وسط محور", x: 250, y: 200 },
-      { name: "", pos: "وسط محور", x: 350, y: 200 },
-      { name: "", pos: "وسط يسار", x: 450, y: 200 },
-      { name: "", pos: "مهاجم", x: 250, y: 100 },
-      { name: "", pos: "مهاجم", x: 350, y: 100 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 150, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 250, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 350, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 450, y: 300 },
+      { name: "", pos: "وسط يمين", abbr: "و.ي", x: 150, y: 200 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 250, y: 200 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 350, y: 200 },
+      { name: "", pos: "وسط يسار", abbr: "و.س", x: 450, y: 200 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 250, y: 100 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 350, y: 100 }
     ],
     "4-2-3-1": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 150, y: 300 },
-      { name: "", pos: "مدافع", x: 250, y: 300 },
-      { name: "", pos: "مدافع", x: 350, y: 300 },
-      { name: "", pos: "مدافع", x: 450, y: 300 },
-      { name: "", pos: "وسط دفاعي", x: 220, y: 230 },
-      { name: "", pos: "وسط دفاعي", x: 380, y: 230 },
-      { name: "", pos: "جناح يمين", x: 180, y: 150 },
-      { name: "", pos: "وسط هجومي", x: 300, y: 150 },
-      { name: "", pos: "جناح يسار", x: 420, y: 150 },
-      { name: "", pos: "مهاجم", x: 300, y: 100 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 150, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 250, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 350, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 450, y: 300 },
+      { name: "", pos: "وسط دفاعي", abbr: "و.د", x: 220, y: 230 },
+      { name: "", pos: "وسط دفاعي", abbr: "و.د", x: 380, y: 230 },
+      { name: "", pos: "جناح يمين", abbr: "ج.ي", x: 180, y: 150 },
+      { name: "", pos: "وسط هجومي", abbr: "و.هـ", x: 300, y: 150 },
+      { name: "", pos: "جناح يسار", abbr: "ج.س", x: 420, y: 150 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 300, y: 100 }
     ],
     "3-5-2": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 200, y: 300 },
-      { name: "", pos: "مدافع", x: 300, y: 300 },
-      { name: "", pos: "مدافع", x: 400, y: 300 },
-      { name: "", pos: "وسط يمين", x: 120, y: 230 },
-      { name: "", pos: "وسط محور", x: 220, y: 230 },
-      { name: "", pos: "وسط محور", x: 300, y: 230 },
-      { name: "", pos: "وسط محور", x: 380, y: 230 },
-      { name: "", pos: "وسط يسار", x: 480, y: 230 },
-      { name: "", pos: "مهاجم", x: 220, y: 120 },
-      { name: "", pos: "مهاجم", x: 380, y: 120 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 200, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 300, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 400, y: 300 },
+      { name: "", pos: "وسط يمين", abbr: "و.ي", x: 120, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 220, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 300, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 380, y: 230 },
+      { name: "", pos: "وسط يسار", abbr: "و.س", x: 480, y: 230 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 220, y: 120 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 380, y: 120 }
     ],
     "5-4-1": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 100, y: 300 },
-      { name: "", pos: "مدافع", x: 200, y: 300 },
-      { name: "", pos: "مدافع", x: 300, y: 300 },
-      { name: "", pos: "مدافع", x: 400, y: 300 },
-      { name: "", pos: "مدافع", x: 500, y: 300 },
-      { name: "", pos: "وسط يمين", x: 150, y: 200 },
-      { name: "", pos: "وسط محور", x: 250, y: 200 },
-      { name: "", pos: "وسط محور", x: 350, y: 200 },
-      { name: "", pos: "وسط يسار", x: 450, y: 200 },
-      { name: "", pos: "مهاجم", x: 300, y: 100 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 100, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 200, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 300, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 400, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 500, y: 300 },
+      { name: "", pos: "وسط يمين", abbr: "و.ي", x: 150, y: 200 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 250, y: 200 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 350, y: 200 },
+      { name: "", pos: "وسط يسار", abbr: "و.س", x: 450, y: 200 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 300, y: 100 }
     ],
     "3-4-3": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 200, y: 300 },
-      { name: "", pos: "مدافع", x: 300, y: 300 },
-      { name: "", pos: "مدافع", x: 400, y: 300 },
-      { name: "", pos: "وسط يمين", x: 150, y: 230 },
-      { name: "", pos: "وسط محور", x: 250, y: 230 },
-      { name: "", pos: "وسط محور", x: 350, y: 230 },
-      { name: "", pos: "وسط يسار", x: 450, y: 230 },
-      { name: "", pos: "جناح يمين", x: 180, y: 120 },
-      { name: "", pos: "مهاجم", x: 300, y: 120 },
-      { name: "", pos: "جناح يسار", x: 420, y: 120 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 200, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 300, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 400, y: 300 },
+      { name: "", pos: "وسط يمين", abbr: "و.ي", x: 150, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 250, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 350, y: 230 },
+      { name: "", pos: "وسط يسار", abbr: "و.س", x: 450, y: 230 },
+      { name: "", pos: "جناح يمين", abbr: "ج.ي", x: 180, y: 120 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 300, y: 120 },
+      { name: "", pos: "جناح يسار", abbr: "ج.س", x: 420, y: 120 }
     ],
     "4-1-4-1": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 150, y: 300 },
-      { name: "", pos: "مدافع", x: 250, y: 300 },
-      { name: "", pos: "مدافع", x: 350, y: 300 },
-      { name: "", pos: "مدافع", x: 450, y: 300 },
-      { name: "", pos: "وسط دفاعي", x: 300, y: 250 },
-      { name: "", pos: "وسط يمين", x: 150, y: 200 },
-      { name: "", pos: "وسط محور", x: 250, y: 200 },
-      { name: "", pos: "وسط محور", x: 350, y: 200 },
-      { name: "", pos: "وسط يسار", x: 450, y: 200 },
-      { name: "", pos: "مهاجم", x: 300, y: 100 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 150, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 250, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 350, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 450, y: 300 },
+      { name: "", pos: "وسط دفاعي", abbr: "و.د", x: 300, y: 250 },
+      { name: "", pos: "وسط يمين", abbr: "و.ي", x: 150, y: 200 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 250, y: 200 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 350, y: 200 },
+      { name: "", pos: "وسط يسار", abbr: "و.س", x: 450, y: 200 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 300, y: 100 }
     ],
     "4-5-1": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 150, y: 300 },
-      { name: "", pos: "مدافع", x: 250, y: 300 },
-      { name: "", pos: "مدافع", x: 350, y: 300 },
-      { name: "", pos: "مدافع", x: 450, y: 300 },
-      { name: "", pos: "وسط يمين", x: 100, y: 230 },
-      { name: "", pos: "وسط محور", x: 200, y: 230 },
-      { name: "", pos: "وسط محور", x: 300, y: 230 },
-      { name: "", pos: "وسط محور", x: 400, y: 230 },
-      { name: "", pos: "وسط يسار", x: 500, y: 230 },
-      { name: "", pos: "مهاجم", x: 300, y: 100 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 150, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 250, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 350, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 450, y: 300 },
+      { name: "", pos: "وسط يمين", abbr: "و.ي", x: 100, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 200, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 300, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 400, y: 230 },
+      { name: "", pos: "وسط يسار", abbr: "و.س", x: 500, y: 230 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 300, y: 100 }
     ],
     "3-4-1-2": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 200, y: 300 },
-      { name: "", pos: "مدافع", x: 300, y: 300 },
-      { name: "", pos: "مدافع", x: 400, y: 300 },
-      { name: "", pos: "وسط يمين", x: 150, y: 230 },
-      { name: "", pos: "وسط محور", x: 250, y: 230 },
-      { name: "", pos: "وسط محور", x: 350, y: 230 },
-      { name: "", pos: "وسط يسار", x: 450, y: 230 },
-      { name: "", pos: "وسط هجومي", x: 300, y: 170 },
-      { name: "", pos: "مهاجم", x: 250, y: 100 },
-      { name: "", pos: "مهاجم", x: 350, y: 100 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 200, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 300, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 400, y: 300 },
+      { name: "", pos: "وسط يمين", abbr: "و.ي", x: 150, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 250, y: 230 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 350, y: 230 },
+      { name: "", pos: "وسط يسار", abbr: "و.س", x: 450, y: 230 },
+      { name: "", pos: "وسط هجومي", abbr: "و.هـ", x: 300, y: 170 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 250, y: 100 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 350, y: 100 }
     ],
     "4-1-2-1-2": [
-      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
-      { name: "", pos: "مدافع", x: 150, y: 300 },
-      { name: "", pos: "مدافع", x: 250, y: 300 },
-      { name: "", pos: "مدافع", x: 350, y: 300 },
-      { name: "", pos: "مدافع", x: 450, y: 300 },
-      { name: "", pos: "وسط دفاعي", x: 300, y: 250 },
-      { name: "", pos: "وسط هجومي", x: 220, y: 200 },
-      { name: "", pos: "وسط هجومي", x: 380, y: 200 },
-      { name: "", pos: "وسط محور", x: 300, y: 150 },
-      { name: "", pos: "مهاجم", x: 250, y: 100 },
-      { name: "", pos: "مهاجم", x: 350, y: 100 }
+      { name: "", pos: "حارس مرمى", abbr: "ح.م", x: 300, y: 380 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 150, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 250, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 350, y: 300 },
+      { name: "", pos: "مدافع", abbr: "مد", x: 450, y: 300 },
+      { name: "", pos: "وسط دفاعي", abbr: "و.د", x: 300, y: 250 },
+      { name: "", pos: "وسط هجومي", abbr: "و.هـ", x: 220, y: 200 },
+      { name: "", pos: "وسط هجومي", abbr: "و.هـ", x: 380, y: 200 },
+      { name: "", pos: "وسط محور", abbr: "و.م", x: 300, y: 150 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 250, y: 100 },
+      { name: "", pos: "مهاجم", abbr: "مه", x: 350, y: 100 }
     ]
   };
 
@@ -263,7 +302,7 @@
     const tactic = document.getElementById("tactic").value;
     const inputsDiv = document.getElementById("playerInputs");
     inputsDiv.innerHTML = "";
-    currentPositions = JSON.parse(JSON.stringify(positionsByTactic[tactic]));
+    currentPositions = JSON.parse(JSON.stringify(positionsByTactic[tactic])); // Deep copy
 
     currentPositions.forEach((p, i) => {
       const div = document.createElement("div");
@@ -281,15 +320,31 @@
 
   function generateFormation() {
     const pitch = document.getElementById("footballPitch");
-    pitch.innerHTML = "";
+    pitch.innerHTML = ""; // Clear previous formation
 
     currentPositions.forEach(p => {
-      const el = document.createElement("div");
-      el.className = "player";
-      el.style.left = p.x + "px";
-      el.style.top = p.y + "px";
-      el.innerText = `${p.name}\n${p.pos}`;
-      pitch.appendChild(el);
+      // Create the main container for player icon and name box
+      const playerContainer = document.createElement("div");
+      playerContainer.className = "player-container";
+      playerContainer.style.left = p.x + "px";
+      playerContainer.style.top = p.y + "px";
+
+      // Create the player icon (circle with abbreviation)
+      const iconEl = document.createElement("div");
+      iconEl.className = "player";
+      iconEl.innerText = p.abbr; // Display abbreviation
+
+      // Create the name box
+      const nameEl = document.createElement("div");
+      nameEl.className = "player-name-box";
+      nameEl.innerText = p.name || ""; // Display name, or empty if not set
+
+      // Append icon and name box to the container
+      playerContainer.appendChild(iconEl);
+      playerContainer.appendChild(nameEl);
+
+      // Append the container to the pitch
+      pitch.appendChild(playerContainer);
     });
   }
 
