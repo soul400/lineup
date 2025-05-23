@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تشكيلة فريق كرة القدم</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js "></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .player-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .player-inputs div {
+      background-color: #ecf0f1;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #219150;
+    }
+
+    .pitch {
+      width: 600px;
+      height: 400px;
+      background: linear-gradient(to bottom, #2ecc71, #27ae60);
+      position: relative;
+      margin: 30px auto;
+      border: 3px solid #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .player {
+      position: absolute;
+      color: white;
+      text-align: center;
+      font-size: 14px;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 8px 10px;
+      border-radius: 50px;
+      white-space: pre-line;
+      text-shadow: 1px 1px 2px black;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>أنشئ تشكيلتك الكروية</h1>
+
+  <label for="tactic">اختر التكتيك:</label>
+  <select id="tactic" onchange="generateInputs()">
+    <option value="4-3-3">4-3-3</option>
+    <option value="4-4-2">4-4-2</option>
+    <option value="4-2-3-1">4-2-3-1</option>
+    <option value="3-5-2">3-5-2</option>
+    <option value="5-4-1">5-4-1</option>
+    <option value="3-4-3">3-4-3</option>
+    <option value="4-1-4-1">4-1-4-1</option>
+    <option value="4-5-1">4-5-1</option>
+    <option value="3-4-1-2">3-4-1-2</option>
+    <option value="4-1-2-1-2">4-1-2-1-2</option>
+  </select>
+
+  <div class="player-inputs" id="playerInputs"></div>
+
+  <div style="text-align:center;">
+    <button onclick="generateFormation()">عرض التشكيلة</button>
+    <button onclick="downloadImage()">تنزيل الصورة</button>
+  </div>
+
+  <div id="footballPitch" class="pitch"></div>
+</div>
+
+<script>
+  const positionsByTactic = {
+    "4-3-3": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 150, y: 300 },
+      { name: "", pos: "مدافع", x: 250, y: 300 },
+      { name: "", pos: "مدافع", x: 350, y: 300 },
+      { name: "", pos: "مدافع", x: 450, y: 300 },
+      { name: "", pos: "وسط محور", x: 250, y: 200 },
+      { name: "", pos: "وسط هجومي", x: 350, y: 200 },
+      { name: "", pos: "جناح يمين", x: 150, y: 100 },
+      { name: "", pos: "مهاجم", x: 300, y: 100 },
+      { name: "", pos: "جناح يسار", x: 450, y: 100 }
+    ],
+    "4-4-2": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 150, y: 300 },
+      { name: "", pos: "مدافع", x: 250, y: 300 },
+      { name: "", pos: "مدافع", x: 350, y: 300 },
+      { name: "", pos: "مدافع", x: 450, y: 300 },
+      { name: "", pos: "وسط يمين", x: 150, y: 200 },
+      { name: "", pos: "وسط محور", x: 250, y: 200 },
+      { name: "", pos: "وسط محور", x: 350, y: 200 },
+      { name: "", pos: "وسط يسار", x: 450, y: 200 },
+      { name: "", pos: "مهاجم", x: 250, y: 100 },
+      { name: "", pos: "مهاجم", x: 350, y: 100 }
+    ],
+    "4-2-3-1": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 150, y: 300 },
+      { name: "", pos: "مدافع", x: 250, y: 300 },
+      { name: "", pos: "مدافع", x: 350, y: 300 },
+      { name: "", pos: "مدافع", x: 450, y: 300 },
+      { name: "", pos: "وسط دفاعي", x: 220, y: 230 },
+      { name: "", pos: "وسط دفاعي", x: 380, y: 230 },
+      { name: "", pos: "جناح يمين", x: 180, y: 150 },
+      { name: "", pos: "وسط هجومي", x: 300, y: 150 },
+      { name: "", pos: "جناح يسار", x: 420, y: 150 },
+      { name: "", pos: "مهاجم", x: 300, y: 100 }
+    ],
+    "3-5-2": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 200, y: 300 },
+      { name: "", pos: "مدافع", x: 300, y: 300 },
+      { name: "", pos: "مدافع", x: 400, y: 300 },
+      { name: "", pos: "وسط يمين", x: 120, y: 230 },
+      { name: "", pos: "وسط محور", x: 220, y: 230 },
+      { name: "", pos: "وسط محور", x: 300, y: 230 },
+      { name: "", pos: "وسط محور", x: 380, y: 230 },
+      { name: "", pos: "وسط يسار", x: 480, y: 230 },
+      { name: "", pos: "مهاجم", x: 220, y: 120 },
+      { name: "", pos: "مهاجم", x: 380, y: 120 }
+    ],
+    "5-4-1": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 100, y: 300 },
+      { name: "", pos: "مدافع", x: 200, y: 300 },
+      { name: "", pos: "مدافع", x: 300, y: 300 },
+      { name: "", pos: "مدافع", x: 400, y: 300 },
+      { name: "", pos: "مدافع", x: 500, y: 300 },
+      { name: "", pos: "وسط يمين", x: 150, y: 200 },
+      { name: "", pos: "وسط محور", x: 250, y: 200 },
+      { name: "", pos: "وسط محور", x: 350, y: 200 },
+      { name: "", pos: "وسط يسار", x: 450, y: 200 },
+      { name: "", pos: "مهاجم", x: 300, y: 100 }
+    ],
+    "3-4-3": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 200, y: 300 },
+      { name: "", pos: "مدافع", x: 300, y: 300 },
+      { name: "", pos: "مدافع", x: 400, y: 300 },
+      { name: "", pos: "وسط يمين", x: 150, y: 230 },
+      { name: "", pos: "وسط محور", x: 250, y: 230 },
+      { name: "", pos: "وسط محور", x: 350, y: 230 },
+      { name: "", pos: "وسط يسار", x: 450, y: 230 },
+      { name: "", pos: "جناح يمين", x: 180, y: 120 },
+      { name: "", pos: "مهاجم", x: 300, y: 120 },
+      { name: "", pos: "جناح يسار", x: 420, y: 120 }
+    ],
+    "4-1-4-1": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 150, y: 300 },
+      { name: "", pos: "مدافع", x: 250, y: 300 },
+      { name: "", pos: "مدافع", x: 350, y: 300 },
+      { name: "", pos: "مدافع", x: 450, y: 300 },
+      { name: "", pos: "وسط دفاعي", x: 300, y: 250 },
+      { name: "", pos: "وسط يمين", x: 150, y: 200 },
+      { name: "", pos: "وسط محور", x: 250, y: 200 },
+      { name: "", pos: "وسط محور", x: 350, y: 200 },
+      { name: "", pos: "وسط يسار", x: 450, y: 200 },
+      { name: "", pos: "مهاجم", x: 300, y: 100 }
+    ],
+    "4-5-1": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 150, y: 300 },
+      { name: "", pos: "مدافع", x: 250, y: 300 },
+      { name: "", pos: "مدافع", x: 350, y: 300 },
+      { name: "", pos: "مدافع", x: 450, y: 300 },
+      { name: "", pos: "وسط يمين", x: 100, y: 230 },
+      { name: "", pos: "وسط محور", x: 200, y: 230 },
+      { name: "", pos: "وسط محور", x: 300, y: 230 },
+      { name: "", pos: "وسط محور", x: 400, y: 230 },
+      { name: "", pos: "وسط يسار", x: 500, y: 230 },
+      { name: "", pos: "مهاجم", x: 300, y: 100 }
+    ],
+    "3-4-1-2": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 200, y: 300 },
+      { name: "", pos: "مدافع", x: 300, y: 300 },
+      { name: "", pos: "مدافع", x: 400, y: 300 },
+      { name: "", pos: "وسط يمين", x: 150, y: 230 },
+      { name: "", pos: "وسط محور", x: 250, y: 230 },
+      { name: "", pos: "وسط محور", x: 350, y: 230 },
+      { name: "", pos: "وسط يسار", x: 450, y: 230 },
+      { name: "", pos: "وسط هجومي", x: 300, y: 170 },
+      { name: "", pos: "مهاجم", x: 250, y: 100 },
+      { name: "", pos: "مهاجم", x: 350, y: 100 }
+    ],
+    "4-1-2-1-2": [
+      { name: "", pos: "حارس مرمى", x: 300, y: 380 },
+      { name: "", pos: "مدافع", x: 150, y: 300 },
+      { name: "", pos: "مدافع", x: 250, y: 300 },
+      { name: "", pos: "مدافع", x: 350, y: 300 },
+      { name: "", pos: "مدافع", x: 450, y: 300 },
+      { name: "", pos: "وسط دفاعي", x: 300, y: 250 },
+      { name: "", pos: "وسط هجومي", x: 220, y: 200 },
+      { name: "", pos: "وسط هجومي", x: 380, y: 200 },
+      { name: "", pos: "وسط محور", x: 300, y: 150 },
+      { name: "", pos: "مهاجم", x: 250, y: 100 },
+      { name: "", pos: "مهاجم", x: 350, y: 100 }
+    ]
+  };
+
+  let currentPositions = [];
+
+  function generateInputs() {
+    const tactic = document.getElementById("tactic").value;
+    const inputsDiv = document.getElementById("playerInputs");
+    inputsDiv.innerHTML = "";
+    currentPositions = JSON.parse(JSON.stringify(positionsByTactic[tactic]));
+
+    currentPositions.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <label>${p.pos}</label>
+        <input type="text" placeholder="اسم اللاعب" oninput="updatePlayer(${i}, this.value)">
+      `;
+      inputsDiv.appendChild(div);
+    });
+  }
+
+  function updatePlayer(index, name) {
+    currentPositions[index].name = name;
+  }
+
+  function generateFormation() {
+    const pitch = document.getElementById("footballPitch");
+    pitch.innerHTML = "";
+
+    currentPositions.forEach(p => {
+      const el = document.createElement("div");
+      el.className = "player";
+      el.style.left = p.x + "px";
+      el.style.top = p.y + "px";
+      el.innerText = `${p.name}\n${p.pos}`;
+      pitch.appendChild(el);
+    });
+  }
+
+  function downloadImage() {
+    html2canvas(document.getElementById("footballPitch")).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "تشكيلة_الفريق.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
+</script>
+</body>
+</html>
